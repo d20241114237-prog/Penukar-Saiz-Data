@@ -1,0 +1,185 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Penukar Saiz Data</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>/* Susun atur: satu lajur kerja, tab di atas, kad langkah berselang-seli; skala data ikut rantai bit → TB */
+:root{
+  --font-head:'Space Grotesk',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:ui-monospace,'SFMono-Regular',Menlo,Consolas,monospace;
+  --bg:#f3f7f8;--surface:#ffffff;--fg:#13262b;--muted:#4f656b;--line:#d3dfe2;
+  --accent:#087680;--accent-ink:#ffffff;--accent-soft:#ddf2f4;
+  --magenta:#a3157b;--magenta-soft:#f8e3f1;--amber:#8a5a00;--amber-soft:#fbefcf;
+  --good:#17703f;--good-soft:#dcf3e5;--bad:#b3261e;--bad-soft:#fde4e1;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1a1d;--surface:#142428;--fg:#e5f0f2;--muted:#9db3b8;--line:#28403f;
+  --accent:#4fcad6;--accent-ink:#05262a;--accent-soft:#11393f;
+  --magenta:#f08ad0;--magenta-soft:#3a1a31;--amber:#f2c35c;--amber-soft:#3a2f12;
+  --good:#63d494;--good-soft:#12301f;--bad:#ff958b;--bad-soft:#3b1815;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1a1d;--surface:#142428;--fg:#e5f0f2;--muted:#9db3b8;--line:#28403f;
+  --accent:#4fcad6;--accent-ink:#05262a;--accent-soft:#11393f;
+  --magenta:#f08ad0;--magenta-soft:#3a1a31;--amber:#f2c35c;--amber-soft:#3a2f12;
+  --good:#63d494;--good-soft:#12301f;--bad:#ff958b;--bad-soft:#3b1815;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--font-body);
+  padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--font-head);text-wrap:balance;margin:0;line-height:1.2}
+h1{font-size:1.75rem}h2{font-size:1.25rem}h3{font-size:1rem}
+.eyebrow{font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.lead{color:var(--muted);margin:6px 0 0;max-width:62ch}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.tab{font:600 .95rem var(--font-head);min-height:52px;padding:8px 6px;border:2px solid var(--line);background:var(--surface);color:var(--fg);border-radius:10px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+:focus-visible{outline:3px solid var(--magenta);outline-offset:2px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:16px}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end}
+.field{display:flex;flex-direction:column;gap:6px;flex:1 1 150px;min-width:0}
+label,.lbl{font-size:.85rem;font-weight:600;color:var(--muted)}
+input,select{font:inherit;font-size:1.1rem;min-height:52px;padding:8px 12px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--fg);width:100%;min-width:0}
+input:focus,select:focus{border-color:var(--accent)}
+.btn{font:600 1rem var(--font-head);min-height:52px;padding:10px 18px;border-radius:10px;border:2px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.small{min-height:44px;padding:6px 12px;font-size:.9rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;min-height:52px;border:2px solid var(--line);background:var(--bg);color:var(--fg);border-radius:10px;font:600 1rem var(--font-body);cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.result{background:var(--accent-soft);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.big{font:700 1.7rem/1.2 var(--font-head);color:var(--accent);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.sub{color:var(--muted);font-size:.95rem;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.steps{display:grid;gap:10px}
+.step{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.step b{font:700 .8rem var(--font-head);letter-spacing:.06em;text-transform:uppercase}
+.step.s1 b{color:var(--magenta)}.step.s2 b{color:var(--amber)}.step.s3 b{color:var(--accent)}
+.mono{font-family:var(--font-mono);font-size:.95rem;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.chain{display:flex;flex-wrap:wrap;align-items:center;gap:6px 4px;padding:12px;border:1px dashed var(--line);border-radius:12px}
+.node{font:700 .95rem var(--font-head);padding:8px 12px;border-radius:8px;border:2px solid var(--line);color:var(--muted)}
+.hop{font:600 .8rem var(--font-mono);color:var(--muted);padding:0 2px}
+.node.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+.hop.on{color:var(--accent);font-weight:700}
+.note{font-size:.85rem;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{border:2px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card.ok{border-color:var(--good)}.card.no{border-color:var(--bad)}
+.tag{font:700 .8rem var(--font-head);color:var(--accent)}
+.msg{font-size:.92rem;border-radius:8px;padding:8px 10px}
+.msg.ok{background:var(--good-soft);color:var(--good)}.msg.no{background:var(--bad-soft);color:var(--bad)}
+.score{font:700 1.1rem var(--font-head)}
+.unit{font-weight:600;color:var(--muted);white-space:nowrap}
+.ansrow{display:flex;gap:8px;align-items:center}
+@media (max-width:480px){.tabs{grid-template-columns:1fr}.big{font-size:1.4rem}}
+@media (prefers-reduced-motion:no-preference){.tab,.btn{transition:background .15s}}
+.tbl{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}.tbl th,.tbl td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.tbl th{font:700 .8rem var(--font-head);color:var(--muted);letter-spacing:.06em;text-transform:uppercase}.tbl td:last-child{text-align:right;font-family:var(--font-mono)}
+</style>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Asas Sains Komputer · Tingkatan 1 · 2.2.6</div>
+    <h1>Penukar Saiz Data</h1>
+    <p class="lead">Tukar bit, bait, KB, MB, GB dan TB. Seperti dalam slaid: 1 bait = 8 bit, dan setiap unit seterusnya = 1 024 unit sebelumnya.</p>
+  </header>
+  <div class="tabs" role="tablist" aria-label="Bahagian penukar">
+    <button class="tab" role="tab" id="t0" aria-controls="p0" aria-selected="true">Penukar Unit</button>
+    <button class="tab" role="tab" id="t1" aria-controls="p1" aria-selected="false">Fail Audio dan Imej</button>
+    <button class="tab" role="tab" id="t2" aria-controls="p2" aria-selected="false">Cabaran Kumpulan</button>
+  </div>
+
+  <section class="panel" id="p0" role="tabpanel" aria-labelledby="t0">
+    <div class="row">
+      <div class="field"><label for="cv">Nilai</label><input id="cv" inputmode="decimal" value="2" autocomplete="off"></div>
+      <div class="field"><label for="cf">Daripada</label><select id="cf"></select></div>
+      <button class="btn ghost" id="swap" type="button" aria-label="Tukar arah">⇄</button>
+      <div class="field"><label for="ct">Kepada</label><select id="ct"></select></div>
+    </div>
+    <div class="chain" id="chain" aria-label="Rantai unit data"></div>
+    <div class="result"><div class="big" id="cres"></div><div class="sub" id="cbit"></div></div>
+    <div class="steps" id="csteps"></div>
+  </section>
+
+  <section class="panel" id="p1" role="tabpanel" aria-labelledby="t1" hidden>
+    <div class="chips" id="fpre" role="group" aria-label="Contoh fail"></div>
+    <div class="row">
+      <div class="field"><label for="fv">Saiz fail</label><input id="fv" inputmode="decimal" value="5" autocomplete="off"></div>
+      <div class="field"><label for="fu">Unit</label><select id="fu"></select></div>
+    </div>
+    <div class="steps" id="fsteps"></div>
+    <table class="tbl" aria-label="Saiz fail dalam semua unit"><thead><tr><th>Unit</th><th>Saiz</th></tr></thead><tbody id="ftab"></tbody></table>
+    <p class="note">Ke unit lebih kecil: darab. Ke unit lebih besar: bahagi.</p>
+  </section>
+
+  <section class="panel" id="p2" role="tabpanel" aria-labelledby="t2" hidden>
+    <div class="row"><p class="lead" style="margin:0;flex:1 1 220px">Setiap kumpulan tukar saiz fail kepada unit yang diminta. Taip nombor sahaja, tanpa unit.</p><div class="score" id="cscore">Skor: 0 / 6</div></div>
+    <div class="cards" id="cards"></div>
+  </section>
+</div>
+<script>
+(function(){
+var U=['bit','bait','KB','MB','GB','TB'];
+function hop(k){return k===0?8:1024}
+function grp(s){return s.replace(/\B(?=(\d{3})+(?!\d))/g,' ')}
+function fmt(n,d){d=d==null?0:d;if(!isFinite(n))return '—';var s=n.toFixed(d);if(d>0&&s.indexOf('.')>-1)s=s.replace(/\.?0+$/,'');var p=s.split('.');return grp(p[0])+(p[1]?','+p[1]:'')}
+function num(v){v=String(v).replace(/[\s\u00a0]/g,'');if(/^\d{1,3}(\.\d{3})+$/.test(v))v=v.replace(/\./g,'');v=v.replace(',','.');if(v==='')return NaN;var n=Number(v);return isNaN(n)||n<0?NaN:n}
+function convert(v,a,b){var lines=[],cur=v,k;
+  if(a<b){for(k=a;k<b;k++){var n=cur/hop(k);lines.push(fmt(cur,6)+' '+U[k]+' ÷ '+fmt(hop(k))+' = '+fmt(n,6)+' '+U[k+1]);cur=n}}
+  else if(a>b){for(k=a-1;k>=b;k--){var m=cur*hop(k);lines.push(fmt(cur,6)+' '+U[k+1]+' × '+fmt(hop(k))+' = '+fmt(m,6)+' '+U[k]);cur=m}}
+  return {value:cur,lines:lines}}
+window.SF={convert:convert,fmt:fmt,num:num};
+var $=function(i){return document.getElementById(i)};
+var tabs=[0,1,2];
+function show(i){tabs.forEach(function(t){var on=t===i;$('t'+t).setAttribute('aria-selected',on);$('p'+t).hidden=!on});try{history.replaceState(null,'','#t'+i)}catch(e){}}
+tabs.forEach(function(t){$('t'+t).addEventListener('click',function(){show(t)})});
+var h=location.hash.match(/^#t([0-2])$/);if(h)show(+h[1]);
+/* tab 0 */
+U.forEach(function(u,i){['cf','ct'].forEach(function(id){var o=document.createElement('option');o.value=i;o.textContent=u;$(id).appendChild(o)})});
+$('cf').value=3;$('ct').value=2;
+function drawChain(a,b){var lo=Math.min(a,b),hi=Math.max(a,b),h='';
+  U.forEach(function(u,i){h+='<span class="node'+(i>=lo&&i<=hi?' on':'')+'">'+u+'</span>';if(i<5)h+='<span class="hop'+(i>=lo&&i<hi?' on':'')+'">×'+hop(i)+'</span>'});$('chain').innerHTML=h}
+function renderConv(){var a=+$('cf').value,b=+$('ct').value,v=num($('cv').value);drawChain(a,b);
+  if(isNaN(v)){$('cres').textContent='Masukkan nombor';$('cbit').textContent='';$('csteps').innerHTML='';return}
+  var r=convert(v,a,b);
+  $('cres').textContent=fmt(v,6)+' '+U[a]+' = '+fmt(r.value,6)+' '+U[b];
+  $('cbit').textContent=a===b?'Unit sama, nilai tidak berubah.':(a<b?'Ke unit lebih besar: bahagi.':'Ke unit lebih kecil: darab.');
+  $('csteps').innerHTML=r.lines.map(function(l,i){return '<div class="step s3"><b>Langkah '+(i+1)+'</b><span class="mono">'+l+'</span></div>'}).join('')}
+['cv','cf','ct'].forEach(function(id){$(id).addEventListener('input',renderConv)});
+$('swap').addEventListener('click',function(){var t=$('cf').value;$('cf').value=$('ct').value;$('ct').value=t;renderConv()});
+renderConv();
+/* tab 1 */
+[2,3,4,5].forEach(function(i){var o=document.createElement('option');o.value=i;o.textContent=U[i];$('fu').appendChild(o)});
+$('fu').value=3;
+var PRE=[['lagu_sekolah.mp3 · 4,2 MB',4.2,3],['gambar_kelas.jpg · 850 KB',850,2],['Audio · 5 MB',5,3],['Imej · 8 192 KB',8192,2]];
+PRE.forEach(function(p){var b=document.createElement('button');b.type='button';b.className='btn ghost small';b.textContent=p[0];b.addEventListener('click',function(){$('fv').value=String(p[1]).replace('.',',');$('fu').value=p[2];renderFile()});$('fpre').appendChild(b)});
+function renderFile(){var v=num($('fv').value),a=+$('fu').value;
+  if(isNaN(v)){$('fsteps').innerHTML='<div class="step"><span class="mono">Masukkan saiz fail.</span></div>';$('ftab').innerHTML='';return}
+  var r=convert(v,a,0);
+  var names=['Langkah 1','Langkah 2','Langkah 3','Langkah 4','Langkah 5'];
+  $('fsteps').innerHTML=r.lines.map(function(l,i){return '<div class="step s'+((i%3)+1)+'"><b>'+names[i]+'</b><span class="mono">'+l+'</span></div>'}).join('');
+  var rows='';for(var k=5;k>=0;k--){rows+='<tr><td>'+U[k]+'</td><td>'+fmt(convert(v,a,k).value,6)+'</td></tr>'}
+  $('ftab').innerHTML=rows}
+['fv','fu'].forEach(function(id){$(id).addEventListener('input',renderFile)});
+renderFile();
+/* tab 2 */
+var CH=[
+ {t:'Audio',s:'Fail audio lagu_kelas.mp3 bersaiz 6 MB. Tukarkan kepada KB.',v:6,a:3,b:2},
+ {t:'Imej',s:'Imej poster.png bersaiz 12 288 KB. Tukarkan kepada MB.',v:12288,a:2,b:3},
+ {t:'Audio',s:'Rakaman suara bersaiz 3 KB. Tukarkan kepada bit.',v:3,a:2,b:0},
+ {t:'Imej',s:'Koleksi imej bersaiz 4 GB. Tukarkan kepada MB.',v:4,a:4,b:3},
+ {t:'Audio',s:'Fail audio bersaiz 3 MB. Tukarkan kepada bait.',v:3,a:3,b:1},
+ {t:'Imej',s:'Imej logo.png bersaiz 1 MB. Tukarkan kepada bit.',v:1,a:3,b:0}];
+function hint(c){return c.a>c.b?'Semak semula: ke unit lebih kecil, DARAB. Darab dengan 1 024 bagi setiap langkah, dan dengan 8 bagi bait ke bit.':'Semak semula: ke unit lebih besar, BAHAGI. Bahagi dengan 1 024 bagi setiap langkah.'}
+var done={};
+function score(){var n=Object.keys(done).filter(function(k){return done[k]}).length;$('cscore').textContent='Skor: '+n+' / 6'}
+CH.forEach(function(c,i){var d=document.createElement('div');d.className='card';d.id='k'+i;
+  d.innerHTML='<div class="tag">K'+(i+1)+' · '+c.t+'</div><div>'+c.s+'</div>'+
+  '<div class="ansrow"><input id="ka'+i+'" inputmode="decimal" aria-label="Jawapan K'+(i+1)+' dalam '+U[c.b]+'" placeholder="0"><span class="unit">'+U[c.b]+'</span></div>'+
+  '<button class="btn" type="button" id="kb'+i+'">Semak</button><div id="km'+i+'" aria-live="polite"></div>';
+  $('cards').appendChild(d);
+  $('kb'+i).addEventListener('click',function(){var v=num($('ka'+i).value),m=$('km'+i),r=convert(c.v,c.a,c.b);
+    if(isNaN(v)){m.innerHTML='<div class="msg no">Taip jawapan dalam '+U[c.b]+' dahulu.</div>';return}
+    var ok=Math.abs(v-r.value)<=Math.abs(r.value)*1e-9+1e-9;done[i]=ok;d.className='card '+(ok?'ok':'no');
+    m.innerHTML=ok?'<div class="msg ok"><b>Betul!</b><br><span class="mono">'+r.lines.join('<br>')+'</span></div>':'<div class="msg no">Belum tepat. '+hint(c)+'</div>';score()})});
+})();
+</script>
+
+</body></html>
